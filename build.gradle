@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = "ru.magdel.agloraemulator"
+
+
+application {
+    mainClass = 'ru.magdel.agloraemulator.DeviceForm'
+}
+
+java {
+    sourceCompatibility = '17'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.apache.httpcomponents.client5:httpclient5:5.3-alpha1"
+    implementation "org.jdesktop:appframework:1.0.3"
+    implementation "org.jdesktop:swing-worker:1.1"
+    implementation "com.fazecast:jSerialComm:[2.0.0,3.0.0)"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.8.1"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.8.1"
+}
+
+tasks.named('test') {
+    //useTestNG()
+    useJUnitPlatform()
+}
