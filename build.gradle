@@ -10,8 +10,12 @@ application {
     mainClass = 'ru.magdel.agloraemulator.DeviceForm'
 }
 
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
 java {
     sourceCompatibility = '17'
+
 }
 
 configurations {
