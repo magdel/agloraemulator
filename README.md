@@ -9,13 +9,12 @@ Mobile client (Dart, Flutter): https://github.com/Udj13/AGLoRa-client-flutter
 
 ## Usage
 
-Start application and specify device id and COM port write data to.
+To start application correctly you need IntelliJ IDEA CE. Running build from gradle will not work because
+of limited support for GUI Designer by Jetbrains and they not gonna improve it (https://youtrack.jetbrains.com/issue/IDEA-223518).
+Run application in IDE and specify device id and COM port write data to.
 
 ![Sample running view](docs/images/img.png)
 
-### Releases
-
-For direct downloads, check out [Releases](../../releases).
 
 ## Contributing
 
