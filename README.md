@@ -4,7 +4,9 @@
 [![Hits-of-Code](https://hitsofcode.com/github/magdel/agloraemulator?branch=main&label=Hits-of-Code)](https://hitsofcode.com/github/magdel/agloraemulator/view?branch=main&label=Hits-of-Code)
 
 Emulator sends serial data as would AGLoRa device do to BLE.
+
 See Full project (C++, PlatformIO): https://github.com/Udj13/AGLoRa-full/
+
 Mobile client (Dart, Flutter): https://github.com/Udj13/AGLoRa-client-flutter
 
 ## Usage
