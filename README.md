@@ -4,6 +4,7 @@
 [![Hits-of-Code](https://hitsofcode.com/github/magdel/agloraemulator?branch=main&label=Hits-of-Code)](https://hitsofcode.com/github/magdel/agloraemulator/view?branch=main&label=Hits-of-Code)
 
 Emulator sends serial data as would AGLoRa device do to BLE.
+Data sending is every second as recorded in source track [raw NMEA 0183](src/main/resources/data/round1.txt)
 
 See Full project (C++, PlatformIO): https://github.com/Udj13/AGLoRa-full/
 
@@ -16,6 +17,15 @@ of limited support for GUI Designer by Jetbrains and they not gonna improve it (
 Run application in IDE and specify device id and COM port write data to.
 
 ![Sample running view](docs/images/img.png)
+
+## BLE adapter assembly
+
+To send data use ready made modules like JDY-09 and USB-To-TTL (CH340) coupled together. See datasheet for your modules to connect properly.
+
+Front
+![Assembly view 1](docs/images/assembly1.jpg)
+Back
+![Assembly view 2](docs/images/assembly2.jpg)
 
 
 ## Contributing

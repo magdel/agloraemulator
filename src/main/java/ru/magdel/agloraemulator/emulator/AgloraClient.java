@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -103,8 +104,11 @@ public class AgloraClient implements TrackPointListener {
         data += "&crs=" + ((int) pointToSend.getCrs());
         data += "&bat=60";
         data += "&tbat=70";
-        data += "&timestamp=" + DateTimeFormatter.ISO_DATE_TIME.format(Instant.ofEpochMilli(pointToSend.getTime()).atOffset(ZoneOffset.UTC));//+"Z" ;
-        data += "&sat=12\n";
+        data += "&timestamp=" + DateTimeFormatter.ISO_DATE_TIME.format(
+                Instant.ofEpochMilli(pointToSend.getTime()).atOffset(ZoneOffset.UTC)
+                        .truncatedTo(ChronoUnit.SECONDS)
+        );
+        data += "&sat=12\r\n";
         return data;
     }
 
