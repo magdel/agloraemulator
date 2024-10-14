@@ -20,7 +20,7 @@ Run application in IDE and specify device id and COM port write data to.
 
 ## BLE adapter assembly
 
-To send data use ready made modules like JDY-09 and USB-To-TTL (CH340) coupled together. See datasheet for your modules to connect properly.
+To send data use ready made modules like JDY-09 (AT-09) and USB-To-TTL (CH340) coupled together. See datasheet for your modules to connect properly.
 
 Front
 ![Assembly view 1](docs/images/assembly1.jpg)

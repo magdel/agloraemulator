@@ -66,7 +66,7 @@ public class AgloraClient implements TrackPointListener {
                                     }
                                     pointToSend = lastTrackPoint;
                                     String data = createAgloraString(pointToSend, deviceId);
-                                    System.out.println(data);
+                                    System.out.print(data);
                                     os.write(data.getBytes(StandardCharsets.US_ASCII));
                                     os.flush();
                                     lastSentPoint = pointToSend;

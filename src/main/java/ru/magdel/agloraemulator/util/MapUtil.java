@@ -11,7 +11,6 @@ package ru.magdel.agloraemulator.util;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * Map Utilities
@@ -78,100 +77,7 @@ public final class MapUtil {
   static public String S_OK="OK";
   public static String MAP_MNO="/map.mno";
 
-//  final static public int getTileCount(int level) {
-//    return (level < 2) ? 1 : 2 << (level - 2);
-//  }
-//  final static public int getTileCount(int level) {
-//    int res;
-//    if (level<2) res=1;else res=2<<(level-2);
-//    return res;
-//  }
-  
-  final static int getBitmapSize(int level) {
-    //return blockSize * getTileCount(level);
-    return blockSize*((level<2)?1:2<<(level-2));
-  }
-
-  final static int getBitmapOrig(int level) {
-    return (blockSize*((level<2)?1:2<<(level-2)))>>1;
-  }
-
-  final static double getPixelsPerLonDegree(int level) {
-    return ((double) (blockSize*((level<2)?1:2<<(level-2))))*0.0027777777777777777777777777777778d;
-  }
-
-  final static double getPixelsPerLonRadian(int level) {
-    return ((double) (blockSize*((level<2)?1:2<<(level-2))))*(0.15915494309189533576888376337251d);
-  }
-  // final static double grad2rad(double g) {return g*G2R;}
-//  final static double abs(double a) {
-//    if (a>=0) return a;
-//    return -a;
-//  }
-//  final static int abs(int a) {
-//    if (a>=0) return a;
-//    return -a;
-//  }
-//  final static public double sqr(double a) {
-//    return a * a;
-//  }
-  final static public double getLon(int X, int level) {
-    return (double) (X-getBitmapOrig(level))/getPixelsPerLonDegree(level);
-  }
-
-  final static public double getLat(int Y, int level) {
-    return (atan(exp((double) (Y-getBitmapOrig(level))/(-getPixelsPerLonRadian(level))))-PIdiv4)*114.59155902616464175359630962821d;
-
-  //double z = (double)(Y-getBitmapOrig(level))/(-getPixelsPerLonRadian(level));
-  //return (atan(exp(z))-PIdiv4)*114.59155902616464175359630962821d;
-
-//return (2*atan(exp(z))-PIdiv2)*57.295779513082320876798154814105;
-  }
-
-  final static public String getGLBlockName(int NumX, int NumY, int level) {
-    int d;
-    StringBuffer res=new StringBuffer(20);
-    if (level<2){
-      d=1;
-    } else {
-      d=2<<(level-2);
-    }
-    if ((NumX<0)||(d-1<NumX)){
-      NumX=NumX-(NumX/d)*d;
-      if (NumX<0){
-        NumX=NumX+d;
-      }
-    }
-    res.append('t');
-    for (int i=2; i<=level; i++) {
-      d=d>>1;
-      if (NumY<d){
-        if (NumX<d){
-          res.append('q');
-        } else {
-          res.append('r');
-          NumX=NumX-d;
-        }
-      } else {
-        if (NumX<d){
-          res.append('t');
-        } else {
-          res.append('s');
-          NumX=NumX-d;
-        }
-        NumY=NumY-d;
-      }
-    }
-    return res.toString();
-  }
-
-  final static public String getYHBlockName(int NumX, int NumY, int level) {
-    level=18-level;
-    String s="&x="+NumX+"&y="+(((1<<17-level)>>1)-1-NumY)+"&z="+(level+1);
-    return s;
-  }
-
-  final static private double _ln(double x) {
+   static private double _ln(double x) {
     if (!(x>0.)){
       return Double.NaN;
     }
@@ -200,7 +106,7 @@ public final class MapUtil {
     return f;
   }
 
-  final static public double ln(double x) {
+   static public double ln(double x) {
     if (!(x>0.)){
       return Double.NaN;
     }
@@ -214,7 +120,7 @@ public final class MapUtil {
     return _ln(x);
   }
 
-  final static public double exp(double x) {
+   static public double exp(double x) {
     if (x==0.){
       return 1.;
     }
@@ -238,7 +144,7 @@ public final class MapUtil {
     }
   }
 
-  final static public double atan2(double y, double x) {
+   static public double atan2(double y, double x) {
 
     if (y==0.&&x==0.){
       return 0.;
@@ -261,7 +167,7 @@ public final class MapUtil {
     }
   }
 
-  final static public double atan(double x) {
+   static public double atan(double x) {
     boolean signChange=false;
     boolean Invert=false;
     int sp=0;
@@ -307,32 +213,7 @@ public final class MapUtil {
     return a;
   }
 
-  final static public int getXMap(double lon, int level) {
-    //double X = getBitmapOrig(level) + lon * getPixelsPerLonDegree(level);
-    return (int) (0.5+getBitmapOrig(level)+lon*getPixelsPerLonDegree(level));// X;
-  }
 
-  final static public int getYMap(double lat, int level) {
-    double z=Math.sin(lat*G2R);
-    //double Y = (double)getBitmapOrig(level) - 0.5 * ln((1.+z)/(1.-z)) * getPixelsPerLonRadian(level);
-    //return (int) Y;
-    return (int) (0.5+(double) getBitmapOrig(level)-0.5*ln((1.+z)/(1.-z))*getPixelsPerLonRadian(level));
-  }
-
-  final static public int getNumX(int xMap) {
-//    int NumX =  (int)((double)xMap/ blockSize); //floor
-    // int NumX =  (int)(xMap/ blockSize); //floor
-    return xMap/blockSize;
-  }
-
-  final static public int getNumY(int yMap) {
-    //int NumY =  (int)(yMap/ blockSize);
-    return yMap/blockSize;
-  }
-
-  final static public String getGLBlockNameD(double lat, double lon, int level) {
-    return getGLBlockName(getNumX(getXMap(lon, level)), getNumY(getYMap(lat, level)), level);
-  }
   public static final byte CLATTYPE=1;
   public static final byte CLONTYPE=2;
 
@@ -342,7 +223,7 @@ public final class MapUtil {
     final public static byte COORDGGGMMMMMMTYPE=4;
 
 
-  final static public String coordToString(double coord, byte lontype, byte coordType) {
+   static public String coordToString(double coord, byte lontype, byte coordType) {
     int icoord=(int) (coord);
     int icoordg, icoordm, icoords;
     double dcoord, dcoordm, dcoords;
@@ -396,53 +277,6 @@ public final class MapUtil {
     return s;
   }
 
-//  final static public String coord2EditString(double coord, byte lontype, byte coordType) {
-//    int icoord=(int) (coord);
-//    int icoordg, icoordm, icoords;
-//    double dcoord, dcoordm, dcoords;
-//    char a;
-//
-//    if (lontype==CLATTYPE){
-//      if (coord>0){
-//        dcoord=coord-icoord;
-//        a=' ';
-//      } else {
-//        dcoord=icoord-coord;
-//        a='-';
-//      }
-//    } else //if (lontype==CLONTYPE)
-//    {
-//      if (coord>0){
-//        dcoord=coord-icoord;
-//        a=' ';
-//      } else {
-//        dcoord=icoord-coord;
-//        a='-';
-//      }
-//    }
-//    String s=null;
-//    if (coordType==RMSOption.COORDMINSECTYPE){
-//      icoordm=(int) (dcoord*60.);
-//      icoords=(int) ((dcoord-(icoordm/60.))*3600.);
-//      dcoords=MapUtil.coordRound1((dcoord-(icoordm/60.))*3600.);
-//      icoordg=Math.abs(icoord);
-//      s=a+MapUtil.numStr(icoordg, 2)+' '+numStr(icoordm, 2)+' '+String.valueOf(dcoords);
-////      s=a+MapUtil.make2(icoordg)+' '+ make2(icoordm)+' '+ make2(icoords);
-//    } else if (coordType==RMSOption.COORDMINMMMTYPE){
-//      icoordg=Math.abs(icoord);
-//      icoordm=(int) (dcoord*60.);
-//      icoords=(int) ((dcoord-(icoordm/60.))*60000.);
-//
-//      s=a+MapUtil.numStr(icoordg, 2)+' '+MapUtil.numStr(icoordm, 2)+'.'+MapUtil.numStr(icoords, 3);
-//    } else if (coordType==RMSOption.COORDGGGGGGTYPE){
-//      icoordm=((int) (dcoord*100000.));
-//      icoordg=Math.abs(icoord);
-//      s=a+MapUtil.numStr(icoordg, 2)+'.'+MapUtil.numStr(icoordm, 5);
-//    }
-//
-//    return s;
-//  }
-
   /**
    * Разбор координаты в указанном формате
    * RMSOption.COORDMINSECTYPE
@@ -466,128 +300,8 @@ public final class MapUtil {
     }
     return s.toString();
   }
-//    public static String numStrCrop(int number, int digits) {
-//    String s;
-//    for (s=MapUtil.emptyString+number; s.length()<digits; s="0"+s);
-//    if (s.length()>digits) {
-//      s=s.substring(s.length()-digits);
-//    }
-//    return s;
-//  }
 
-//  final static public String make2(int i) {
-//    if (i < 10) {
-//      StringBuffer sb = new StringBuffer(3);
-//      sb.append('0').append(i);
-//      return sb.toString();
-//    } else {
-//      return String.valueOf(i);
-//    }
-//  }
-//
-//  final static public String make3(int i) {
-//    if (i < 10) {
-//      StringBuffer sb = new StringBuffer(4);
-//      sb.append('0').append('0').append(i);
-//      return sb.toString();
-//    } else if (i < 100) {
-//      StringBuffer sb = new StringBuffer(4);
-//      sb.append('0').append(i);
-//      return sb.toString();
-//    } else {
-//      return String.valueOf(i);
-//    }
-//  }
-//
-//  final static public String make4(int i) {
-//    boolean rev = false;
-//    if (i < 0) {
-//      i = -i;
-//      rev = true;
-//    }
-//    if (rev) {
-//      if (i < 10) {
-//        StringBuffer sb = new StringBuffer(4);
-//        sb.append('-').append('0').append('0').append(i);
-//        return sb.toString();
-//      } else if (i < 100) {
-//        StringBuffer sb = new StringBuffer(4);
-//        sb.append('-').append(i);
-//        return sb.toString();
-//      } else //if (i<10) return '-'+'0'+'0'+String.valueOf(i);
-//      //if (i<100) return '-'+'0'+String.valueOf(i);
-//      {
-//        return String.valueOf(i);
-//      }
-//    } else {
-//      if (i < 10) {
-//        StringBuffer sb = new StringBuffer(4);
-//        sb.append('0').append('0').append('0').append(i);
-//        return sb.toString();
-//      } else //    if (i<10) return '0'+'0'+'0'+String.valueOf(i);
-//      if (i < 100) {
-//        StringBuffer sb = new StringBuffer(4);
-//        sb.append('0').append('0').append(i);
-//        return sb.toString();
-//      } else //if (i<100) return '0'+'0'+String.valueOf(i);
-//      if (i < 1000) {
-//        StringBuffer sb = new StringBuffer(4);
-//        sb.append('0').append(i);
-//        return sb.toString();
-//      } else //      if (i<1000) return '0'+String.valueOf(i);
-//      {
-//        return String.valueOf(i);
-//      }
-//    }
-//  }
-//
-//  final static public String make5(int i) {
-//    boolean rev = false;
-//    if (i < 0) {
-//      i = -i;
-//      rev = true;
-//    }
-//    if (rev) {
-//      if (i < 10) {
-//        return "-000" + String.valueOf(i);
-//      } else //if (i<100) return '-'+'0'+'0'+String.valueOf(i);
-//      if (i < 100) {
-//        StringBuffer sb = new StringBuffer(5);
-//        sb.append('-').append('0').append('0');
-//        sb.append(i);
-//        return sb.toString();
-//      } else if (i < 1000) {
-//        StringBuffer sb = new StringBuffer(5);
-//        sb.append('-').append('0').append(i);
-//        return sb.toString();
-//      } else //if (i<1000) return '-'+'0'+String.valueOf(i);
-//      {
-//        return String.valueOf(i);
-//      }
-//    } else {
-//      if (i < 10) {
-//        return "0000" + String.valueOf(i);
-//      } else if (i < 100) {
-//        StringBuffer sb = new StringBuffer(5);
-//        sb.append('0').append('0').append('0').append(i);
-//        return sb.toString();
-//      } else //if (i<100) return '0'+'0'+'0'+String.valueOf(i);
-//      if (i < 1000) {
-//        StringBuffer sb = new StringBuffer(5);
-//        sb.append('0').append('0').append(i);
-//        return sb.toString();
-//      } else //if (i<1000) return '0'+'0'+String.valueOf(i);
-//      if (i < 10000) {
-//        StringBuffer sb = new StringBuffer(5);
-//        sb.append('0').append(i);
-//        return sb.toString();
-//      } else //if (i<10000) return '0'+String.valueOf(i);
-//      {
-//        return String.valueOf(i);
-//      }
-//    }
-//  }
-  final public static double distRound3(double res) {
+  public static double distRound3(double res) {
     boolean sign=res<0;
     if (sign){
       res=-res;
@@ -634,7 +348,6 @@ public final class MapUtil {
       return 0;
     }
     return ((int) (res*10d))/10.d;
-  //else return ((int)res);
   }
 
     final public static double doubleRound1(double res) {
@@ -650,7 +363,6 @@ public final class MapUtil {
     else
     return ((int) (res*10d))/10.d;
 
-  //else return ((int)res);
   }
 
   final public static double speedRound1(double res) {
@@ -674,11 +386,6 @@ public final class MapUtil {
     }
     return ((int) (res*1000.d))/1000.d;
   }
-//  final static public String makeOdometer1(float f) {
-//    int km = (int)(f/1000f);
-//    int m = (int)(f - km*1000f);
-//    return String.valueOf(km)+'.'+make3(m);
-//  }
 
 
   final public static String[] parseString(String s, char delim) throws Exception {
@@ -785,34 +492,7 @@ public final class MapUtil {
   }
 
 
-//    public final static void ARGB_Img_Scale(int[] srcRGB, int[] dstRGB, int srcW, int srcH, int dstW, int dstH) {
-//    int x0, y0, x1, y1;
-//    int pix;
-//    double xRate = srcW/dstW;
-//    double yRate = srcH/dstH;
-//    
-//    for (y1=dstH-1; y1>=0; y1--) {
-//      for (x1=dstW-1; x1>=0; x1--) {
-//        pix=0;
-//        
-//        dstRGB[y1*dstW+x1]=pix;
-//      }
-//    }
-//          ARGB_Img1[y1*2*ImW+x1*2]=ARGB_Img0[(y1+yc)*ImW+x1+xc];
-//  }
 
- 
-  public final static void ARGB_Img_Invert(int[] ARGB_Img0, int ImW, int ImH) {
-    for (int y1=ImH-1; y1>=0; y1--) {
-      for (int x1=ImW-1; x1>=0; x1--) {
-        ARGB_Img0[(y1)*ImW+x1]=~(ARGB_Img0[(y1)*ImW+x1]);
-      }
-    }
-  }
-
-  public final static int invertColor(int color) {
-    return (~color)&0x00FFFFFF;
-  }
   private final static double ro=206264.8062471;// ' Число угловых секунд в радиане
 //' Эллипсоид Красовского
   public final static double aP=6378245;// ' Большая полуось
@@ -868,80 +548,6 @@ public final class MapUtil {
     return Ld-dL(Bd, Ld, H)*2.7777777777777777777777777777778e-4;// / 3600.0;
   }
 
-  static final String coordTM2String(double coord, boolean lat, boolean sign) {
-    if (lat){
-      if (sign){
-        return String.valueOf((int) coord)+'E';
-      } else {
-        return String.valueOf((int) coord)+'W';
-      }
-    } else {
-      if (sign){
-        return String.valueOf((int) coord)+'N';
-      } else {
-        return String.valueOf((int) coord)+'S';
-      }
-    }
-  }
-  private static double[] resSK=new double[3];
-  private static char[] resZone=new char[1];
-
-  private static Calendar calendar=Calendar.getInstance(TimeZone.getDefault());
-//  {
-//    calendar.setTime(new Date());
-//  }
-  final public static String UTC2Local(long time) {
-    String res;
-    try {
-      calendar.setTime(new Date(time));
-      res=
-        MapUtil.numStr(calendar.get(Calendar.HOUR_OF_DAY), 2)+':'+
-        MapUtil.numStr(calendar.get(Calendar.MINUTE), 2)+':'+
-        MapUtil.numStr(calendar.get(Calendar.SECOND), 2);
-
-    } catch (Throwable t) {
-      res=String.valueOf(time);
-    }
-    return res;
-  }
-
-  final public static String trackNameAuto() {
-    return trackName(System.currentTimeMillis());
-  }
-
-  final public static String trackName(long time) {
-    String res;
-    try {
-      Calendar cal;
-      (cal=Calendar.getInstance()).setTime(new Date(time));
-      res=MapUtil.numStr(cal.get(Calendar.YEAR), 4)+
-        MapUtil.numStr(1+cal.get(Calendar.MONTH), 2)+
-        MapUtil.numStr(cal.get(Calendar.DAY_OF_MONTH), 2)+
-        '_'+
-        MapUtil.numStr(cal.get(Calendar.HOUR_OF_DAY), 2)+
-        MapUtil.numStr(cal.get(Calendar.MINUTE), 2);
-    } catch (Throwable t) {
-      res=String.valueOf(time);
-    }
-    return res;
-  }
-
-  final public static String trackNameSec() {
-    String res;
-    try {
-      Calendar cal;
-      (cal=Calendar.getInstance()).setTime(new Date());
-      res=MapUtil.numStr(cal.get(Calendar.YEAR), 4)+
-        MapUtil.numStr(1+cal.get(Calendar.MONTH), 2)+
-        MapUtil.numStr(cal.get(Calendar.DAY_OF_MONTH), 2)+
-        '_'+
-        MapUtil.numStr(cal.get(Calendar.HOUR_OF_DAY), 2)+
-        MapUtil.numStr(cal.get(Calendar.MINUTE), 2)+MapUtil.numStr(cal.get(Calendar.SECOND), 2);
-    } catch (Throwable t) {
-      res=String.valueOf(System.currentTimeMillis());
-    }
-    return res;
-  }
 
   final public static String dateTime2Str(long time) {
     String res;
@@ -961,25 +567,7 @@ public final class MapUtil {
   }
 
 
-  final public static String checkFilename(String fn) {
-    StringBuffer sb=new StringBuffer(fn);
-    for (int i=0; i<sb.length(); i++) {
-      if (sb.charAt(i)==':'){
-        sb.setCharAt(i, '_');
-      } else if (sb.charAt(i)=='.'){
-        sb.setCharAt(i, '_');
-      } else if (sb.charAt(i)=='-'){
-        sb.setCharAt(i, '_');
-      } else if (sb.charAt(i)=='/'){
-        sb.setCharAt(i, '_');
-      } else if (sb.charAt(i)=='\\'){
-        sb.setCharAt(i, '_');
-      } else if (sb.charAt(i)==' '){
-        sb.setCharAt(i, '_');
-      }
-    }
-    return sb.toString();
-  }
+
 
   public final static String time2String(long time) {
     long hour=time/3600000;
@@ -990,42 +578,5 @@ public final class MapUtil {
   }
 
 
-  public static int[] colors={0x000000, 0x000080, 0x008000, 0x008080, 0x800000, 0x800080, 0x808000,
-    0x808080, 0xC0C0C0, 0x0000FF, 0x00FF00, 0x00FFFF, 0xFF0000, 0xFF00FF, 0xFFFF00,
-    0xC0C0C0, 0x808080, 0xFFFFFF
-  };
-  private static String Letters="ABCDEFGHJKLMNPQRSTUVWXYZ";
-
-  public final static int getColorIndex(int color) {
-    int ind=-1;
-    for (int i=MapUtil.colors.length-1; i>=0; i--) {
-      if (color==MapUtil.colors[i]){
-        ind=i;
-        break;
-      }
-    }
-    return ind;
-  }
-
-  
-  public static String extractFilename(String furl) {
-    try {
-      return furl.substring(furl.lastIndexOf('/')+1);
-    } catch (Throwable ttt) {
-      return furl.substring(furl.length()-6);
-    }
-  }
-
-  public static int checkSum(byte[] data) {
-    int sum=0;
-    //int bi;
-    for (int i=data.length-1; i>=0; i--) {
-        //bi = data[i];
-        //if (bi<0)bi+=256;
-        //sum+=bi;
-        sum+=data[i];
-    }
-    return sum;
-  }
 }
 
