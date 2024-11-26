@@ -16,48 +16,47 @@ import java.util.logging.Logger;
 
 public class DeviceTrack {
 
-    private final List<DeviceTrackPoint> track = new ArrayList<DeviceTrackPoint>();
+    private final List<DeviceTrackPoint> track = new ArrayList<>();
     private final Calendar calendar;
     private final long startTime;
-    private final long endTime;
-    private final long duration;
     private final Runnable daemon;
     private Thread thrd;
-    private List<TrackPointListener> listeners = new ArrayList<TrackPointListener>();
+    private final List<TrackPointListener> listeners = new ArrayList<>();
 
     public DeviceTrack(InputStream nmeaInputStream) {
         calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         calendar.setTimeInMillis(System.currentTimeMillis());
 
         Reader r = new InputStreamReader(nmeaInputStream);
-        StringBuffer line = new StringBuffer(200);
+        StringBuffer line = new StringBuffer(256);
         char c;
         int bR;
         try {
             while ((bR = r.read()) >= 0) {
                 c = (char) bR;
-                if (c == (char) 13) {
+                if (c == '\n') {
                     try {
                         addLine(line);
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
                     }
                     line.setLength(0);
                 } else {
                     line.append(c);
                 }
             }
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             Logger.getLogger(DeviceTrack.class.getName()).log(Level.SEVERE, null, ex);
             throw new IllegalArgumentException(ex);
         }
         try {
             r.close();
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             Logger.getLogger(DeviceTrack.class.getName()).log(Level.SEVERE, null, ex);
         }
         startTime = track.get(0).getTime();
-        endTime = track.get(track.size() - 1).getTime();
-        duration = startTime - endTime;
 
         daemon = new Runnable() {
 
@@ -79,7 +78,8 @@ public class DeviceTrack {
                             Thread.sleep(50);
                         }
                     }
-                } catch (InterruptedException ex) {
+                }
+                catch (InterruptedException ex) {
                     //   Logger.getLogger(DeviceTrack.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
@@ -93,7 +93,8 @@ public class DeviceTrack {
             //       0          1 2         3  4         5  6      7     8
             //$GPRMC,213931.000,A,5955.6719,N,03023.3435,E,29.35,348.43,271109,,*37
             elems = MapUtil.parseString(line.toString(), ',');
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             Logger.getLogger(DeviceTrack.class.getName()).log(Level.SEVERE, null, ex);
             throw new IllegalArgumentException(ex);
         }

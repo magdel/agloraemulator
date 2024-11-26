@@ -12,15 +12,18 @@ Mobile client (Dart, Flutter): https://github.com/Udj13/AGLoRa-client-flutter
 
 ## Usage
 
-To start application correctly you need IntelliJ IDEA CE. Running build from gradle will not work because
-of limited support for GUI Designer by Jetbrains and they not gonna improve it (https://youtrack.jetbrains.com/issue/IDEA-223518).
-Run application in IDE and specify device id and COM port write data to.
+To start application correctly you need IntelliJ IDEA CE.
+**Running build from gradle will not work because
+of limited support for GUI Designer by Jetbrains and they not gonna improve it (https://youtrack.jetbrains.com/issue/IDEA-223518).**
+
+**Run application in IDE** and specify device id and COM port write data to.
 
 ![Sample running view](docs/images/img.png)
 
 ## BLE adapter assembly
 
-To send data use ready made modules like JDY-09 (AT-09) and USB-To-TTL (CH340) coupled together. See datasheet for your modules to connect properly.
+To send data use ready made modules like JDY-09 (AT-09) and USB-To-TTL (CH340) coupled together. See datasheet for your modules to connect properly. Connect to BLE module from phone
+as you do to connect to device.
 
 Front
 ![Assembly view 1](docs/images/assembly1.jpg)
