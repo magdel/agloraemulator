@@ -110,7 +110,7 @@ public class AgloraClient implements TrackPointListener {
             data += "&t=" + DateTimeFormatter.ISO_DATE_TIME.format(
                     Instant.ofEpochMilli(pointToSend.getTime()).atOffset(ZoneOffset.UTC)
                             .truncatedTo(ChronoUnit.SECONDS)
-            );`
+            );
             data += "&sat=12\r\n";
             return data;
         }
