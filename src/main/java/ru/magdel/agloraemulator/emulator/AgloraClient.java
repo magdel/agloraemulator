@@ -23,7 +23,8 @@ public class AgloraClient implements TrackPointListener {
     private volatile boolean stopped;
 
     public AgloraClient(final String comPort, final String deviceId,
-                        final JLabel jStatus) {
+                        final JLabel jStatus,
+                        JCheckBox cbCompact) {
         daemon = new Runnable() {
 
             public void run() {
@@ -65,7 +66,7 @@ public class AgloraClient implements TrackPointListener {
                                         Thread.sleep(100);
                                     }
                                     pointToSend = lastTrackPoint;
-                                    String data = createAgloraString(pointToSend, deviceId);
+                                    String data = createAgloraString(pointToSend, deviceId, cbCompact.isSelected());
                                     System.out.print(data);
                                     os.write(data.getBytes(StandardCharsets.US_ASCII));
                                     os.flush();
@@ -94,7 +95,26 @@ public class AgloraClient implements TrackPointListener {
         };
     }
 
-    static String createAgloraString(DeviceTrackPoint pointToSend, String deviceId) {
+    static String createAgloraString(DeviceTrackPoint pointToSend, String deviceId, boolean compactProtocolVersion) {
+        if (compactProtocolVersion) {
+            String data = "AGLoRaN&ver=2.0";
+            data += "&n=" + deviceId;
+            data += "&a=" + MapUtil.coordRound5(pointToSend.getLat());
+            data += "&o=" + MapUtil.coordRound5(pointToSend.getLon());
+            data += "&s=" + MapUtil.speedRound1(pointToSend.getSpd());
+            data += "&h=" + pointToSend.getAlt();
+            data += "&c=" + ((int) pointToSend.getCrs());
+            data += "&dn=PCEmulator";
+            data += "&db=77";
+            data += "&c=" + ((int) pointToSend.getCrs());
+            data += "&b=33";
+            data += "&t=" + DateTimeFormatter.ISO_DATE_TIME.format(
+                    Instant.ofEpochMilli(pointToSend.getTime()).atOffset(ZoneOffset.UTC)
+                            .truncatedTo(ChronoUnit.SECONDS)
+            );
+            data += "&sat=12\r\n";
+            return data;
+        }
         String data = "AGLoRa-newpoint&ver=1.0";
         data += "&name=" + deviceId;
         data += "&lat=" + MapUtil.coordRound5(pointToSend.getLat());

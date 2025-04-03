@@ -19,7 +19,8 @@ public class DeviceForm extends JFrame{
 
     private JTextField textFieldId;
     private JTextField textFieldPort;
-    private JLabel jLabel;
+    private JLabel lStatus;
+    private JCheckBox cbCompact;
     private DeviceTrack devTrack;
     private AgloraClient client;
     public DeviceForm() {
@@ -40,7 +41,7 @@ public class DeviceForm extends JFrame{
                     buttonLocal.setText("Start");
                     client = null;
                 } else {
-                    client = new AgloraClient(textFieldPort.getText(), textFieldId.getText(), jLabel);
+                    client = new AgloraClient(textFieldPort.getText(), textFieldId.getText(), lStatus, cbCompact);
                     devTrack.registerListener(client);
                     client.start();
                     buttonLocal.setText("Stop");
